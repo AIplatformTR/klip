@@ -2,7 +2,7 @@ import { Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
 import { collection, getDocs, doc, getDoc, addDoc, query, where, collectionGroup } from 'firebase/firestore';
-import { Clapperboard, User, LineChart, History, Copy, Info, Plus, Search, DollarSign, Users, Video, Eye, Lock, Mail, Trash2, Fingerprint, Clock, Inbox, Link as LinkIcon, Wallet } from 'lucide-react';
+import { Clapperboard, User, LineChart, History, Copy, Info, Plus, Search, DollarSign, Users, Video, Eye, Lock, Mail, Trash2, Fingerprint, Clock, Inbox, Link as LinkIcon, Wallet, X } from 'lucide-react';
 
 const mockCampaigns = [
   { id: '1', title: 'Clown [ALL]', budget: 3000, budgetUsed: 0, creators: 27, rate: '130.00', tags: ['Music', 'New'], imgSeed: 'clown' },
@@ -52,13 +52,13 @@ function CreatorOverview() {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold uppercase tracking-wider text-white">Campaigns</h1>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+        <h1 className="text-2xl font-bold uppercase tracking-wider text-white w-full md:w-auto text-center md:text-left">Campaigns</h1>
         <div className="flex items-center gap-2 text-3xl font-bold tracking-tight text-white">
-          <Clapperboard className="w-8 h-8" />
+          <Clapperboard className="w-8 h-8 text-red-600" />
           KLIPSTER
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-400 w-full md:w-auto justify-center md:justify-end">
           Sort By
           <select className="bg-[#1c2333] border border-gray-700 rounded-md px-3 py-1.5 text-white outline-none focus:border-gray-500">
             <option>Newest</option>
@@ -67,12 +67,12 @@ function CreatorOverview() {
       </div>
 
       {/* Filters */}
-      <div className="bg-[#1c2333] rounded-lg p-2 flex gap-2 mb-6">
+      <div className="bg-[#1c2333] rounded-lg p-2 flex gap-2 mb-6 overflow-x-auto whitespace-nowrap">
         {['All', 'Music', 'Logo', 'Clipping', 'UGC'].map(f => (
           <button 
             key={f}
             onClick={() => setActiveFilter(f)}
-            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${activeFilter === f ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-white'}`}
+            className={`px-6 py-2 rounded-md text-sm font-medium transition-colors shrink-0 ${activeFilter === f ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-white'}`}
           >
             {f}
           </button>
@@ -80,9 +80,9 @@ function CreatorOverview() {
       </div>
 
       {/* Checkboxes */}
-      <div className="flex items-center gap-6 mb-8 text-sm text-gray-300">
+      <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8 text-sm text-gray-300">
         {['TikTok', 'Instagram', 'YouTube', 'X'].map(platform => (
-          <label key={platform} className="flex items-center gap-2 cursor-pointer">
+          <label key={platform} className="flex items-center gap-2 cursor-pointer shrink-0">
             <input 
               type="checkbox" 
               defaultChecked 
@@ -91,22 +91,22 @@ function CreatorOverview() {
             {platform}
           </label>
         ))}
-        <span className="text-gray-500 ml-auto">50 from 50 campaigns</span>
+        <span className="text-gray-500 w-full sm:w-auto sm:ml-auto text-center sm:text-left mt-2 sm:mt-0">50 from 50 campaigns</span>
       </div>
 
       {/* Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {displayCampaigns.map(campaign => (
           <div key={campaign.id} className="bg-[#1c2333] rounded-2xl p-4 flex flex-col border border-gray-800 hover:border-gray-700 transition-colors">
-            <div className="flex gap-4 mb-4 h-40">
+            <div className="flex flex-col sm:flex-row gap-4 mb-4 sm:h-40">
               {/* Image */}
-              <div className="w-1/2 relative rounded-xl overflow-hidden bg-gray-800">
+              <div className="w-full sm:w-1/2 h-40 sm:h-auto relative rounded-xl overflow-hidden bg-gray-800 shrink-0">
                 <img 
                   src={campaign.imageUrl || `https://picsum.photos/seed/${campaign.imgSeed || campaign.id}/400/400`} 
                   alt={campaign.title}
                   className="object-cover w-full h-full" 
                 />
-                <div className="absolute bottom-2 left-2 flex gap-1">
+                <div className="absolute bottom-2 left-2 flex gap-1 flex-wrap">
                   {(campaign.tags || ['Music', 'New']).map((tag: string, i: number) => (
                     <span key={i} className={`${tag === 'Music' || tag === 'Logo' ? 'bg-red-600' : 'bg-green-500'} text-white text-[10px] font-bold px-2 py-0.5 rounded-full`}>
                       {tag}
@@ -115,7 +115,7 @@ function CreatorOverview() {
                 </div>
               </div>
               {/* Info */}
-              <div className="w-1/2 flex flex-col justify-center">
+              <div className="w-full sm:w-1/2 flex flex-col justify-center">
                 <h3 className="text-lg font-bold text-white mb-4 leading-tight">{campaign.title}</h3>
                 
                 <div className="space-y-3">
@@ -229,15 +229,15 @@ function SubmitContent() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">Submit to Campaign</h2>
-        <Link to="/creators" className="text-gray-400 hover:text-white transition-colors">Back</Link>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl md:text-2xl font-bold text-white">Submit to Campaign</h2>
+        <Link to="/creators" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Back</Link>
       </div>
 
       <div className="bg-[#1c2333] p-6 rounded-xl border border-gray-800">
-        <div className="flex justify-between items-start mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
           <h3 className="text-xl font-bold text-white">{campaign.title}</h3>
-          <span className="bg-green-500/20 text-green-400 font-medium px-3 py-1 rounded-full border border-green-500/30">${campaign.budget}</span>
+          <span className="bg-green-500/20 text-green-400 font-medium px-3 py-1 rounded-full border border-green-500/30 shrink-0">${campaign.budget}</span>
         </div>
         <p className="text-gray-300 mb-4">{campaign.description || 'No description provided.'}</p>
         <div className="bg-[#0b0f19] p-4 rounded-lg border border-gray-800">
@@ -313,10 +313,10 @@ function CreatorHome() {
               <User className="w-5 h-5 text-gray-400" />
               <span>Username: <span className="text-gray-400">{auth.currentUser?.displayName || 'User'}</span></span>
             </div>
-            <div className="flex items-center gap-3 text-gray-300">
-              <Fingerprint className="w-5 h-5 text-gray-400" />
-              <span>User ID: <span className="text-gray-400">{auth.currentUser?.uid.substring(0, 16)}...</span></span>
-              <button className="text-red-500 hover:text-red-400 flex items-center gap-1 text-sm ml-auto">
+            <div className="flex flex-wrap items-center gap-3 text-gray-300">
+              <Fingerprint className="w-5 h-5 text-gray-400 shrink-0" />
+              <span className="truncate max-w-[150px] sm:max-w-none">User ID: <span className="text-gray-400">{auth.currentUser?.uid?.substring(0, 16)}...</span></span>
+              <button className="text-red-500 hover:text-red-400 flex items-center gap-1 text-sm ml-auto shrink-0">
                 <Copy className="w-4 h-4" /> Copy
               </button>
             </div>
@@ -373,11 +373,17 @@ function MyCampaigns() {
 }
 
 function ConnectedAccounts() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [profileLink, setProfileLink] = useState('');
+
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-red-600">Connected Accounts</h1>
-        <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium flex items-center gap-2 transition-colors">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-red-600 text-center md:text-left">Connected Accounts</h1>
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-6 py-3 md:py-2 rounded-full font-medium flex items-center justify-center gap-2 transition-colors"
+        >
           <Plus className="w-5 h-5" /> Connect Account
         </button>
       </div>
@@ -387,6 +393,45 @@ function ConnectedAccounts() {
         <h2 className="text-2xl font-bold text-white mb-2">No Connected Accounts</h2>
         <p className="text-gray-400">Connect your social media accounts to get started</p>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#1c2333] rounded-xl w-full max-w-md overflow-hidden border border-gray-800 shadow-2xl">
+            <div className="flex justify-between items-center p-6 border-b border-gray-800">
+              <h2 className="text-xl font-bold text-red-500">Connect Social Media Account</h2>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Profile Link</label>
+                <input
+                  type="url"
+                  value={profileLink}
+                  onChange={(e) => setProfileLink(e.target.value)}
+                  placeholder="https://www.tiktok.com/@pawlash"
+                  className="w-full p-3 bg-[#0b0f19] border border-gray-700 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-white placeholder-gray-600"
+                />
+              </div>
+              <button 
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-medium transition-colors mt-4"
+                onClick={() => {
+                  alert('Verification started for: ' + profileLink);
+                  setIsModalOpen(false);
+                  setProfileLink('');
+                }}
+              >
+                Start Verification
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -467,7 +512,17 @@ function Balance() {
       </div>
 
       <h2 className="text-xl font-bold text-white mb-6">Recent Transactions</h2>
-      {/* Empty state for transactions could go here */}
+      <div className="bg-[#1c2333] rounded-xl p-8 border border-gray-800 text-center mb-8">
+        <p className="text-gray-400">Your recent transaction history will appear here once you have completed payments.</p>
+      </div>
+
+      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+        <h2 className="text-xl font-bold text-white mb-4">Need Help?</h2>
+        <p className="text-gray-400 mb-4">If you have any questions about payments or need assistance, our support team is here to help.</p>
+        <button className="text-red-500 hover:text-red-400 font-medium flex items-center gap-1 transition-colors">
+          Contact Support <span className="text-lg">›</span>
+        </button>
+      </div>
     </div>
   );
 }
@@ -480,11 +535,11 @@ function Profile() {
       <h1 className="text-3xl font-bold text-red-600 mb-8">Profile</h1>
 
       {/* User Info Card */}
-      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 mb-6 flex items-center gap-6">
-        <div className="w-20 h-20 rounded-full bg-red-600 flex items-center justify-center text-3xl font-bold text-white">
+      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 mb-6 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+        <div className="w-20 h-20 rounded-full bg-red-600 flex items-center justify-center text-3xl font-bold text-white shrink-0">
           {user?.displayName?.charAt(0).toUpperCase() || 'U'}
         </div>
-        <div>
+        <div className="flex flex-col items-center sm:items-start">
           <div className="flex items-center gap-3 mb-1">
             <h2 className="text-2xl font-bold text-white">{user?.displayName || 'User'}</h2>
             <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">User</span>
@@ -496,12 +551,12 @@ function Profile() {
 
       {/* Statistics Card */}
       <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 mb-6">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div className="flex items-center gap-2">
             <LineChart className="text-red-600 w-6 h-6" />
             <h2 className="text-xl font-bold text-white">Statistics</h2>
           </div>
-          <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm">
+          <button className="w-full sm:w-auto justify-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm">
             <LinkIcon className="w-4 h-4" /> Generate Referral Link
           </button>
         </div>
@@ -531,30 +586,54 @@ function Profile() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Payment Methods */}
         <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
-          <h2 className="text-lg font-bold text-white mb-6">Payment Methods</h2>
-          <div className="border border-dashed border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center">
+          <div className="border border-dashed border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center mb-6">
             <Wallet className="w-8 h-8 text-gray-600 mb-3" />
             <p className="text-white font-medium mb-1">No payment method added</p>
-            <p className="text-gray-500 text-sm">Add a payment method to receive</p>
+            <p className="text-gray-500 text-sm">Add a payment method to receive earnings</p>
+          </div>
+          <div className="space-y-4 border border-dashed border-gray-700 rounded-xl p-4">
+            <select 
+              defaultValue=""
+              className="w-full p-3 bg-[#0b0f19] border border-gray-700 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-white appearance-none"
+            >
+              <option value="" disabled>Select payment method</option>
+              <option value="paypal">PayPal</option>
+              <option value="bank">Bank Transfer</option>
+            </select>
+            <input 
+              type="text" 
+              placeholder="Enter payment details" 
+              className="w-full p-3 bg-[#0b0f19] border border-gray-700 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-white placeholder-gray-600"
+            />
+            <input 
+              type="text" 
+              placeholder="Nickname (optional)" 
+              className="w-full p-3 bg-[#0b0f19] border border-gray-700 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-white placeholder-gray-600"
+            />
+            <button className="w-full bg-red-900/50 text-red-400 py-3 rounded-lg font-medium hover:bg-red-900/70 transition-colors">
+              Add Payment Method
+            </button>
           </div>
         </div>
 
         {/* Login Methods */}
         <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
-          <h2 className="text-lg font-bold text-white mb-6">Login Methods</h2>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center shrink-0">
-                <Mail className="w-5 h-5 text-red-500" />
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-gray-400 text-xs">Email</p>
-                <p className="text-white text-sm truncate">{user?.email}</p>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center shrink-0">
+                  <Mail className="w-5 h-5 text-red-500" />
+                </div>
+                <div className="overflow-hidden">
+                  <p className="text-gray-400 text-xs">Email</p>
+                  <p className="text-white text-sm truncate">{user?.email || 'dostatok.tr@gmail.com'}</p>
+                </div>
               </div>
             </div>
+            
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center shrink-0">
@@ -568,16 +647,43 @@ function Profile() {
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
+                  <span className="text-gray-400 font-bold">D</span>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm">Discord</p>
+                </div>
+              </div>
+              <button className="text-red-500 hover:text-red-400 text-sm font-medium">
+                + Add
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center shrink-0">
+                  <span className="text-gray-400 font-bold">A</span>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm">Apple</p>
+                </div>
+              </div>
+              <button className="text-red-500 hover:text-red-400 text-sm font-medium">
+                + Add
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Username */}
         <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
-          <h2 className="text-lg font-bold text-white mb-6">Username</h2>
           <div className="bg-[#0b0f19] border border-gray-700 rounded-lg p-3 flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Lock className="w-4 h-4 text-yellow-500" />
-              <span className="text-gray-300">{user?.displayName?.toLowerCase().replace(/\s+/g, '') || 'user'}</span>
+              <span className="text-gray-300">{user?.displayName?.toLowerCase().replace(/\s+/g, '') || 'romank'}</span>
             </div>
             <button className="text-red-500 hover:text-red-400 flex items-center gap-1 text-sm">
               <Copy className="w-4 h-4" /> Copy
@@ -588,6 +694,18 @@ function Profile() {
             <p>Your username cannot be changed once set. It is used for your referral link and profile URL.</p>
           </div>
         </div>
+      </div>
+
+      {/* Danger Zone */}
+      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-red-500 font-bold text-xl">⚠️</span>
+          <h2 className="text-xl font-bold text-white">Danger Zone</h2>
+        </div>
+        <p className="text-gray-400 mb-6">Once you delete your account, there is no going back. Please be certain.</p>
+        <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+          Delete Account
+        </button>
       </div>
     </div>
   );

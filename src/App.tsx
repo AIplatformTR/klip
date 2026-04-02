@@ -68,7 +68,7 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-[#131826] text-white flex font-sans">
         {user && userRole && <Sidebar userRole={userRole} />}
-        <main className={`flex-1 ${user && userRole ? 'ml-20' : ''} p-8`}>
+        <main className={`flex-1 ${user && userRole ? 'md:ml-20 mb-16 md:mb-0' : ''} p-4 md:p-8 overflow-x-hidden`}>
           {!user ? (
             <div className="flex flex-col items-center justify-center min-h-[80vh]">
               <div className="flex items-center gap-3 mb-8">

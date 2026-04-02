@@ -26,9 +26,9 @@ function BrandOverview() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-white">Brand Dashboard</h1>
-        <Link to="/brands/new" className="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-white">Brand Dashboard</h1>
+        <Link to="/brands/new" className="w-full sm:w-auto text-center bg-red-600 text-white px-4 py-3 sm:py-2 rounded-lg font-medium hover:bg-red-700 transition-colors">
           Create Campaign
         </Link>
       </div>
@@ -139,9 +139,9 @@ function CampaignDetails() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">{campaign.title} - Submissions</h2>
-        <Link to="/brands" className="text-gray-400 hover:text-white transition-colors">Back to Dashboard</Link>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-xl md:text-2xl font-bold text-white">{campaign.title} - Submissions</h2>
+        <Link to="/brands" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Back to Dashboard</Link>
       </div>
 
       <div className="bg-[#1c2333] rounded-xl shadow-sm border border-gray-800 p-6">
@@ -227,9 +227,9 @@ function CreateCampaign() {
 
   return (
     <div className="max-w-2xl mx-auto bg-[#1c2333] p-8 rounded-xl shadow-sm border border-gray-800">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-white">Create New Campaign</h2>
-        <Link to="/brands" className="text-gray-400 hover:text-white transition-colors">Cancel</Link>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h2 className="text-xl md:text-2xl font-bold text-white">Create New Campaign</h2>
+        <Link to="/brands" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Cancel</Link>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
