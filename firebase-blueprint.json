@@ -1,0 +1,56 @@
+{
+  "entities": {
+    "Brand": {
+      "title": "Brand",
+      "description": "A brand account on the platform.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" }
+      },
+      "required": ["uid", "name", "email"]
+    },
+    "Creator": {
+      "title": "Creator",
+      "description": "A creator account on the platform.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" }
+      },
+      "required": ["uid", "name", "email"]
+    },
+    "Campaign": {
+      "title": "Campaign",
+      "description": "A marketing campaign created by a brand.",
+      "type": "object",
+      "properties": {
+        "brandUid": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "budget": { "type": "number" }
+      },
+      "required": ["brandUid", "title", "description", "budget"]
+    },
+    "Content": {
+      "title": "Content",
+      "description": "Content submitted by a creator for a campaign.",
+      "type": "object",
+      "properties": {
+        "campaignId": { "type": "string" },
+        "creatorUid": { "type": "string" },
+        "url": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] }
+      },
+      "required": ["campaignId", "creatorUid", "url", "status"]
+    }
+  },
+  "firestore": {
+    "/brands/{brandUid}": { "schema": "Brand", "description": "Brand profiles" },
+    "/creators/{creatorUid}": { "schema": "Creator", "description": "Creator profiles" },
+    "/campaigns/{campaignId}": { "schema": "Campaign", "description": "Campaigns" },
+    "/campaigns/{campaignId}/content/{contentId}": { "schema": "Content", "description": "Content submissions" }
+  }
+}

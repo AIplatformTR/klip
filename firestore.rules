@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: brands
+    // Document ID: brandUid
+    // Fields:
+    //   - uid: string (required)
+    //   - name: string (required)
+    //   - email: string (required, email format)
+    //
+    // Collection: creators
+    // Document ID: creatorUid
+    // Fields:
+    //   - uid: string (required)
+    //   - name: string (required)
+    //   - email: string (required, email format)
+    //
+    // Collection: campaigns
+    // Document ID: campaignId
+    // Fields:
+    //   - brandUid: string (required)
+    //   - title: string (required)
+    //   - description: string (required)
+    //   - budget: number (required)
+    //
+    // Collection: campaigns/{campaignId}/content
+    // Document ID: contentId
+    // Fields:
+    //   - campaignId: string (required)
+    //   - creatorUid: string (required)
+    //   - url: string (required)
+    //   - status: string (required, enum: pending, approved, rejected)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() { return request.auth != null; }
+    function isOwner(userId) { return isAuthenticated() && request.auth.uid == userId; }
+
+    match /brands/{brandUid} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(brandUid);
+    }
+    match /creators/{creatorUid} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(creatorUid);
+    }
+    match /campaigns/{campaignId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+    match /campaigns/{campaignId}/content/{contentId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+  }
+}
