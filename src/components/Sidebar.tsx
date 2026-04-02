@@ -1,13 +1,19 @@
-import { Compass, Flag, Users, Wallet, User, LogOut, Settings, Clapperboard, Home } from 'lucide-react';
+import { Compass, Flag, Users, Wallet, User, LogOut, Sun, Moon, Clapperboard } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { logout } from '../firebase';
 
 export default function Sidebar({ userRole }: { userRole?: 'brand' | 'creator' | null }) {
   const location = useLocation();
   const path = location.pathname;
+  const [isDark, setIsDark] = useState(true);
+
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+    document.documentElement.classList.toggle('dark');
+  };
 
   const creatorNavItems = [
-    { icon: Home, path: '/creators' },
     { icon: Compass, path: '/creators/explore' },
     { icon: Flag, path: '/creators/my-campaigns' },
     { icon: Users, path: '/creators/connected-accounts' },
@@ -16,7 +22,6 @@ export default function Sidebar({ userRole }: { userRole?: 'brand' | 'creator' |
   ];
 
   const brandNavItems = [
-    { icon: Home, path: '/brands' },
     { icon: Compass, path: '/brands/campaigns' },
     { icon: User, path: '/brands/profile' },
   ];
@@ -50,8 +55,8 @@ export default function Sidebar({ userRole }: { userRole?: 'brand' | 'creator' |
         <button onClick={logout} className="w-full flex justify-center py-3 rounded-xl text-gray-500 hover:text-white hover:bg-gray-800 transition-colors">
           <LogOut size={24} />
         </button>
-        <button className="w-full flex justify-center py-3 rounded-xl text-gray-500 hover:text-white hover:bg-gray-800 transition-colors">
-          <Settings size={24} />
+        <button onClick={toggleTheme} className="w-full flex justify-center py-3 rounded-xl text-gray-500 hover:text-white hover:bg-gray-800 transition-colors">
+          {isDark ? <Sun size={24} /> : <Moon size={24} />}
         </button>
       </div>
     </div>
