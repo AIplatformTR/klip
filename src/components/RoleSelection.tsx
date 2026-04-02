@@ -9,6 +9,8 @@ interface RoleSelectionProps {
 
 export default function RoleSelection({ onRoleSelected }: RoleSelectionProps) {
   const [role, setRole] = useState<'brand' | 'creator'>('creator');
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [optOutArbitration, setOptOutArbitration] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,6 +19,21 @@ export default function RoleSelection({ onRoleSelected }: RoleSelectionProps) {
     e.preventDefault();
     if (!agreedToTerms) {
       alert('You must agree to the Terms of Use to continue.');
+      return;
+    }
+
+    if (username !== username.toLowerCase()) {
+      setError('Username must be in lowercase.');
+      return;
+    }
+
+    if (username.length < 3 || username.length > 20) {
+      setError('Username must be between 3 and 20 characters.');
+      return;
+    }
+
+    if (!/^[a-z0-9]+$/.test(username)) {
+      setError('Username must contain only lowercase letters and numbers.');
       return;
     }
 
@@ -29,6 +46,7 @@ export default function RoleSelection({ onRoleSelected }: RoleSelectionProps) {
       
       await setDoc(userRef, {
         uid: auth.currentUser.uid,
+        username: username,
         name: auth.currentUser.displayName || 'Anonymous',
         email: auth.currentUser.email || '',
         agreedToTermsAt: new Date().toISOString(),
@@ -39,6 +57,7 @@ export default function RoleSelection({ onRoleSelected }: RoleSelectionProps) {
       // Also save a general user doc for easy role lookup
       await setDoc(doc(db, 'users', auth.currentUser.uid), {
         uid: auth.currentUser.uid,
+        username: username,
         role: role,
       });
 
@@ -95,6 +114,22 @@ export default function RoleSelection({ onRoleSelected }: RoleSelectionProps) {
         </div>
 
         <div className="bg-[#1c2333] p-6 rounded-2xl border border-gray-800 space-y-6">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-1">Choose your username</label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError('');
+              }}
+              className="w-full p-3 bg-[#0b0f19] border border-gray-700 rounded-lg focus:ring-2 focus:ring-red-600 focus:border-red-600 outline-none text-white"
+              placeholder="e.g. klipsteruser123"
+            />
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+          </div>
+
           <h3 className="font-bold text-white text-lg">Legal Agreements</h3>
           
           <div className="space-y-4">

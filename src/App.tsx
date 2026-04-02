@@ -10,6 +10,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { Clapperboard } from 'lucide-react';
 
+import LoginPage from './components/LoginPage';
 import RoleSelection from './components/RoleSelection';
 import BrandDashboard from './components/BrandDashboard';
 import CreatorDashboard from './components/CreatorDashboard';
@@ -70,18 +71,7 @@ export default function App() {
         {user && userRole && <Sidebar userRole={userRole} />}
         <main className={`flex-1 ${user && userRole ? 'md:ml-20 mb-16 md:mb-0' : ''} p-4 md:p-8 overflow-x-hidden`}>
           {!user ? (
-            <div className="flex flex-col items-center justify-center min-h-[80vh]">
-              <div className="flex items-center gap-3 mb-8">
-                <Clapperboard className="text-red-600 w-12 h-12" />
-                <h1 className="text-5xl font-bold tracking-tight">KLIPSTER</h1>
-              </div>
-              <p className="text-xl text-gray-400 mb-8 max-w-md text-center">
-                The premier marketplace connecting Brands and Creators for marketing campaigns.
-              </p>
-              <button onClick={loginWithGoogle} className="bg-red-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-red-700 transition-colors shadow-lg shadow-red-600/20">
-                Sign in with Google
-              </button>
-            </div>
+            <LoginPage />
           ) : !userRole ? (
             <RoleSelection onRoleSelected={setUserRole} />
           ) : (
