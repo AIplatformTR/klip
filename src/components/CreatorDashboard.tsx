@@ -2,7 +2,7 @@ import { Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
 import { collection, getDocs, doc, getDoc, addDoc, query, where, collectionGroup } from 'firebase/firestore';
-import { Clapperboard } from 'lucide-react';
+import { Clapperboard, User, LineChart, History, Copy, Info, Plus, Search, DollarSign, Users, Video, Eye, Lock, Mail, Trash2, Fingerprint, Clock, Inbox, Link as LinkIcon, Wallet } from 'lucide-react';
 
 const mockCampaigns = [
   { id: '1', title: 'Clown [ALL]', budget: 3000, budgetUsed: 0, creators: 27, rate: '130.00', tags: ['Music', 'New'], imgSeed: 'clown' },
@@ -56,7 +56,7 @@ function CreatorOverview() {
         <h1 className="text-2xl font-bold uppercase tracking-wider text-white">Campaigns</h1>
         <div className="flex items-center gap-2 text-3xl font-bold tracking-tight text-white">
           <Clapperboard className="w-8 h-8" />
-          CLIPSTER
+          KLIPSTER
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-400">
           Sort By
@@ -287,9 +287,309 @@ function SubmitContent() {
 export default function CreatorDashboard() {
   return (
     <Routes>
-      <Route path="/" element={<CreatorOverview />} />
+      <Route path="/" element={<CreatorHome />} />
+      <Route path="/explore" element={<CreatorOverview />} />
+      <Route path="/my-campaigns" element={<MyCampaigns />} />
+      <Route path="/connected-accounts" element={<ConnectedAccounts />} />
+      <Route path="/balance" element={<Balance />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/campaign/:id" element={<SubmitContent />} />
     </Routes>
+  );
+}
+
+function CreatorHome() {
+  return (
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Profile Card */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+          <div className="flex items-center gap-2 mb-6">
+            <User className="text-red-600 w-6 h-6" />
+            <h2 className="text-xl font-bold text-white">Profile</h2>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 text-gray-300">
+              <User className="w-5 h-5 text-gray-400" />
+              <span>Username: <span className="text-gray-400">{auth.currentUser?.displayName || 'User'}</span></span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-300">
+              <Fingerprint className="w-5 h-5 text-gray-400" />
+              <span>User ID: <span className="text-gray-400">{auth.currentUser?.uid.substring(0, 16)}...</span></span>
+              <button className="text-red-500 hover:text-red-400 flex items-center gap-1 text-sm ml-auto">
+                <Copy className="w-4 h-4" /> Copy
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Statistics Card */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+          <div className="flex items-center gap-2 mb-6">
+            <LineChart className="text-red-600 w-6 h-6" />
+            <h2 className="text-xl font-bold text-white">Statistics</h2>
+          </div>
+          <div className="flex items-center justify-center h-32 text-gray-500 gap-2">
+            <Clock className="w-5 h-5" /> Coming soon...
+          </div>
+        </div>
+
+        {/* Recent Activity Card */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+          <div className="flex items-center gap-2 mb-6">
+            <History className="text-red-600 w-6 h-6" />
+            <h2 className="text-xl font-bold text-white">Recent Activity</h2>
+          </div>
+          <div className="flex items-center justify-center h-32 text-gray-500 gap-2">
+            <Inbox className="w-5 h-5" /> No recent activity
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MyCampaigns() {
+  return (
+    <div className="w-full">
+      <div className="bg-[#1c2333] rounded-xl p-4 mb-8 border border-gray-800 flex items-start gap-3">
+        <Info className="text-blue-400 w-5 h-5 mt-0.5 shrink-0" />
+        <p className="text-gray-300 text-sm">
+          Earnings will be credited to your Klipster Wallet. Please go to the <Link to="/creators/balance" className="text-red-500 hover:underline">Balance</Link> page to withdraw your earnings. All posts are subject to review and earnings are not final.
+        </p>
+      </div>
+
+      <div className="flex flex-col items-center justify-center h-[60vh]">
+        <div className="w-24 h-24 rounded-full bg-red-900/20 flex items-center justify-center mb-6">
+          <Search className="w-10 h-10 text-red-500" />
+        </div>
+        <h2 className="text-2xl font-bold text-white mb-4">No Campaigns</h2>
+        <p className="text-gray-400 text-center max-w-md">
+          You do not participate in any campaigns at the moment. Try submitting a video to one of the campaigns on the <Link to="/creators/explore" className="text-red-500 hover:underline">Explore</Link> page.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ConnectedAccounts() {
+  return (
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-red-600">Connected Accounts</h1>
+        <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium flex items-center gap-2 transition-colors">
+          <Plus className="w-5 h-5" /> Connect Account
+        </button>
+      </div>
+
+      <div className="border border-dashed border-gray-700 rounded-2xl p-12 flex flex-col items-center justify-center min-h-[400px]">
+        <Plus className="w-16 h-16 text-red-600 mb-6" />
+        <h2 className="text-2xl font-bold text-white mb-2">No Connected Accounts</h2>
+        <p className="text-gray-400">Connect your social media accounts to get started</p>
+      </div>
+    </div>
+  );
+}
+
+function Balance() {
+  return (
+    <div className="w-full max-w-5xl">
+      <h1 className="text-3xl font-bold text-white mb-8">My Balance</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        {/* Campaign Balance */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 flex flex-col">
+          <div className="flex justify-between items-start mb-2">
+            <h2 className="text-lg font-medium text-white">Campaign Balance</h2>
+            <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center">
+              <DollarSign className="w-5 h-5 text-red-500" />
+            </div>
+          </div>
+          <div className="text-4xl font-bold text-red-500 mb-6">$0.00</div>
+          <p className="text-gray-400 text-sm mb-2">Minimum withdrawal amount is $50.00</p>
+          <p className="text-gray-500 text-xs italic mb-6 flex-1">
+            Campaign earnings will show up in your balance after a campaign has ended. If the campaign is awaiting payout, you still need to wait.
+          </p>
+          <button className="w-full bg-red-900/50 text-red-400/50 py-3 rounded-lg font-medium cursor-not-allowed">
+            Request Campaign Payout
+          </button>
+        </div>
+
+        {/* Referral Balance */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 flex flex-col">
+          <div className="flex justify-between items-start mb-2">
+            <h2 className="text-lg font-medium text-white">Referral Balance</h2>
+            <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center">
+              <Users className="w-5 h-5 text-red-500" />
+            </div>
+          </div>
+          <div className="text-4xl font-bold text-red-500 mb-6">$0.00</div>
+          <p className="text-gray-400 text-sm mb-6 flex-1">Minimum withdrawal amount is $50.00</p>
+          <div className="space-y-3">
+            <button className="w-full bg-red-900/50 text-red-400/50 py-3 rounded-lg font-medium cursor-not-allowed">
+              Request Referral Payout
+            </button>
+            <button className="w-full border border-gray-600 text-gray-300 hover:bg-gray-800 py-3 rounded-lg font-medium transition-colors">
+              My Referrals
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="text-xl font-bold text-white mb-6">Payment Information</h2>
+      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 space-y-6 mb-12">
+        <div className="flex gap-4">
+          <div className="mt-1">
+            <div className="w-6 h-6 rounded-full border border-red-500 flex items-center justify-center">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-white font-medium mb-2">Minimum Withdrawal</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              To optimize the payment process and minimize transaction costs for all parties involved, we maintain a minimum withdrawal threshold of $50. This policy helps ensure that the processing fees remain proportional to the transferred amount while maintaining the efficiency of our payment operations. This threshold has been carefully calculated to provide the best balance between frequent access to your earnings and cost-effectiveness.
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <div className="mt-1">
+            <div className="w-6 h-6 rounded-full border border-red-500 flex items-center justify-center text-red-500 font-bold text-xs">
+              !
+            </div>
+          </div>
+          <div>
+            <h3 className="text-white font-medium mb-2">Payment Fees</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              A platform service fee of 3% is applied to all withdrawals to cover operational costs. Additionally, each payment processor has its own fee structure that varies by payment method and region. The final amount you receive will depend on your chosen payment method and your geographical location. We continuously work with our payment partners to negotiate the most favorable rates for our users while ensuring secure and reliable transactions.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="text-xl font-bold text-white mb-6">Recent Transactions</h2>
+      {/* Empty state for transactions could go here */}
+    </div>
+  );
+}
+
+function Profile() {
+  const user = auth.currentUser;
+  
+  return (
+    <div className="w-full max-w-5xl">
+      <h1 className="text-3xl font-bold text-red-600 mb-8">Profile</h1>
+
+      {/* User Info Card */}
+      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 mb-6 flex items-center gap-6">
+        <div className="w-20 h-20 rounded-full bg-red-600 flex items-center justify-center text-3xl font-bold text-white">
+          {user?.displayName?.charAt(0).toUpperCase() || 'U'}
+        </div>
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <h2 className="text-2xl font-bold text-white">{user?.displayName || 'User'}</h2>
+            <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">User</span>
+          </div>
+          <p className="text-gray-400 text-sm mb-1">Member since: March 23, 2026</p>
+          <p className="text-gray-400 text-sm">Email: {user?.email}</p>
+        </div>
+      </div>
+
+      {/* Statistics Card */}
+      <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 mb-6">
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-2">
+            <LineChart className="text-red-600 w-6 h-6" />
+            <h2 className="text-xl font-bold text-white">Statistics</h2>
+          </div>
+          <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors text-sm">
+            <LinkIcon className="w-4 h-4" /> Generate Referral Link
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-[#252d40] rounded-xl p-6 relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="text-gray-400 text-sm mb-2">Total videos</p>
+              <p className="text-3xl font-bold text-red-500">0</p>
+            </div>
+            <Video className="absolute right-4 bottom-4 w-16 h-16 text-red-900/20" />
+          </div>
+          <div className="bg-[#252d40] rounded-xl p-6 relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="text-gray-400 text-sm mb-2">Money earned</p>
+              <p className="text-3xl font-bold text-red-500">$0</p>
+            </div>
+            <DollarSign className="absolute right-4 bottom-4 w-16 h-16 text-red-900/20" />
+          </div>
+          <div className="bg-[#252d40] rounded-xl p-6 relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="text-gray-400 text-sm mb-2">Total views</p>
+              <p className="text-3xl font-bold text-red-500">0</p>
+            </div>
+            <Eye className="absolute right-4 bottom-4 w-16 h-16 text-red-900/20" />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Payment Methods */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+          <h2 className="text-lg font-bold text-white mb-6">Payment Methods</h2>
+          <div className="border border-dashed border-gray-700 rounded-xl p-6 flex flex-col items-center justify-center text-center">
+            <Wallet className="w-8 h-8 text-gray-600 mb-3" />
+            <p className="text-white font-medium mb-1">No payment method added</p>
+            <p className="text-gray-500 text-sm">Add a payment method to receive</p>
+          </div>
+        </div>
+
+        {/* Login Methods */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+          <h2 className="text-lg font-bold text-white mb-6">Login Methods</h2>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center shrink-0">
+                <Mail className="w-5 h-5 text-red-500" />
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-gray-400 text-xs">Email</p>
+                <p className="text-white text-sm truncate">{user?.email}</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-red-900/30 flex items-center justify-center shrink-0">
+                  <span className="text-red-500 font-bold">G</span>
+                </div>
+                <div>
+                  <p className="text-white text-sm">Google</p>
+                </div>
+              </div>
+              <button className="text-red-500 hover:text-red-400">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Username */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800">
+          <h2 className="text-lg font-bold text-white mb-6">Username</h2>
+          <div className="bg-[#0b0f19] border border-gray-700 rounded-lg p-3 flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Lock className="w-4 h-4 text-yellow-500" />
+              <span className="text-gray-300">{user?.displayName?.toLowerCase().replace(/\s+/g, '') || 'user'}</span>
+            </div>
+            <button className="text-red-500 hover:text-red-400 flex items-center gap-1 text-sm">
+              <Copy className="w-4 h-4" /> Copy
+            </button>
+          </div>
+          <div className="flex gap-2 text-gray-500 text-xs">
+            <Info className="w-4 h-4 shrink-0" />
+            <p>Your username cannot be changed once set. It is used for your referral link and profile URL.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

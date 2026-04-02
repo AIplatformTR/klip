@@ -55,10 +55,10 @@ export default function RoleSelection({ onRoleSelected }: RoleSelectionProps) {
       <div className="text-center mb-10">
         <div className="flex items-center justify-center gap-3 mb-6">
           <Clapperboard className="text-red-600 w-10 h-10" />
-          <h1 className="text-4xl font-bold tracking-tight text-white">CLIPSTER</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-white">KLIPSTER</h1>
         </div>
         <h2 className="text-2xl font-bold text-white mb-2">Complete Your Profile</h2>
-        <p className="text-gray-400">How do you want to use Clipster?</p>
+        <p className="text-gray-400">How do you want to use Klipster?</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">

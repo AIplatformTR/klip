@@ -1,31 +1,39 @@
-import { Home, Compass, Flag, Users, Wallet, User, LogOut, Settings, Clapperboard } from 'lucide-react';
+import { Compass, Flag, Users, Wallet, User, LogOut, Settings, Clapperboard } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../firebase';
 
-export default function Sidebar() {
+export default function Sidebar({ userRole }: { userRole?: 'brand' | 'creator' | null }) {
   const location = useLocation();
   const path = location.pathname;
 
-  const navItems = [
-    { icon: Home, path: '/dashboard' },
-    { icon: Compass, path: '/creators' },
-    { icon: Flag, path: '/campaigns' },
-    { icon: Users, path: '/community' },
-    { icon: Wallet, path: '/wallet' },
-    { icon: User, path: '/profile' },
+  const creatorNavItems = [
+    { icon: Compass, path: '/creators/explore' },
+    { icon: Flag, path: '/creators/my-campaigns' },
+    { icon: Users, path: '/creators/connected-accounts' },
+    { icon: Wallet, path: '/creators/balance' },
+    { icon: User, path: '/creators/profile' },
   ];
+
+  const brandNavItems = [
+    { icon: Compass, path: '/brands' },
+    { icon: Flag, path: '/brands/campaigns' },
+    { icon: User, path: '/brands/profile' },
+  ];
+
+  const navItems = userRole === 'creator' ? creatorNavItems : brandNavItems;
+  const homePath = userRole === 'creator' ? '/creators' : '/brands';
 
   return (
     <div className="w-20 bg-[#0b0f19] h-screen fixed left-0 top-0 flex flex-col items-center py-6 border-r border-gray-800 z-50">
       <div className="mb-8">
-        <div className="bg-red-600 p-2 rounded-xl flex items-center justify-center">
+        <Link to={homePath} className="bg-red-600 p-2 rounded-xl flex items-center justify-center hover:bg-red-700 transition-colors">
           <Clapperboard className="text-white w-6 h-6" />
-        </div>
+        </Link>
       </div>
       <div className="flex-1 flex flex-col gap-4 w-full px-3 mt-4">
         {navItems.map((item, i) => {
           const Icon = item.icon;
-          const isActive = path === item.path || (path.startsWith('/creators') && item.icon === Compass) || (path.startsWith('/brands') && item.icon === Flag);
+          const isActive = path === item.path;
           return (
             <Link 
               key={i} 

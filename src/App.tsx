@@ -67,13 +67,13 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen bg-[#131826] text-white flex font-sans">
-        {user && userRole && <Sidebar />}
+        {user && userRole && <Sidebar userRole={userRole} />}
         <main className={`flex-1 ${user && userRole ? 'ml-20' : ''} p-8`}>
           {!user ? (
             <div className="flex flex-col items-center justify-center min-h-[80vh]">
               <div className="flex items-center gap-3 mb-8">
                 <Clapperboard className="text-red-600 w-12 h-12" />
-                <h1 className="text-5xl font-bold tracking-tight">CLIPSTER</h1>
+                <h1 className="text-5xl font-bold tracking-tight">KLIPSTER</h1>
               </div>
               <p className="text-xl text-gray-400 mb-8 max-w-md text-center">
                 The premier marketplace connecting Brands and Creators for marketing campaigns.
