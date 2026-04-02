@@ -10,6 +10,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { Clapperboard } from 'lucide-react';
 
+import LandingPage from './components/LandingPage';
 import LoginPage from './components/LoginPage';
 import RoleSelection from './components/RoleSelection';
 import BrandDashboard from './components/BrandDashboard';
@@ -69,11 +70,17 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-[#131826] text-white flex font-sans">
         {user && userRole && <Sidebar userRole={userRole} />}
-        <main className={`flex-1 ${user && userRole ? 'md:ml-20 mb-16 md:mb-0' : ''} p-4 md:p-8 overflow-x-hidden`}>
+        <main className={`flex-1 ${user && userRole ? 'md:ml-20 mb-16 md:mb-0 p-4 md:p-8' : ''} overflow-x-hidden`}>
           {!user ? (
-            <LoginPage />
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
           ) : !userRole ? (
-            <RoleSelection onRoleSelected={setUserRole} />
+            <div className="p-4 md:p-8">
+              <RoleSelection onRoleSelected={setUserRole} />
+            </div>
           ) : (
             <Routes>
               <Route path="/" element={<Navigate to={`/${userRole}s`} replace />} />
