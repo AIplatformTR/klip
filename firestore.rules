@@ -49,6 +49,10 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow write: if isOwner(creatorUid);
     }
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
     match /campaigns/{campaignId} {
       allow read: if isAuthenticated();
       allow write: if isAuthenticated();
@@ -56,6 +60,9 @@ service cloud.firestore {
     match /campaigns/{campaignId}/content/{contentId} {
       allow read: if isAuthenticated();
       allow write: if isAuthenticated();
+    }
+    match /{path=**}/content/{contentId} {
+      allow read: if isAuthenticated();
     }
   }
 }
