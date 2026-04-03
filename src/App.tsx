@@ -16,6 +16,7 @@ import RoleSelection from './components/RoleSelection';
 import BrandDashboard from './components/BrandDashboard';
 import CreatorDashboard from './components/CreatorDashboard';
 import Sidebar from './components/Sidebar';
+import StartCampaignForm from './components/StartCampaignForm';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -75,6 +76,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/start-campaign" element={<StartCampaignForm />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           ) : !userRole ? (

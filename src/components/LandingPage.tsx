@@ -93,7 +93,7 @@ export default function LandingPage() {
           <span className="text-xl font-bold text-white tracking-widest">KLIPSTER</span>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/login" className="text-gray-300 hover:text-white font-medium px-4 py-2 rounded-full border border-gray-700 hover:border-gray-500 transition-colors text-sm">
+          <Link to="/start-campaign" className="text-gray-300 hover:text-white font-medium px-4 py-2 rounded-full border border-gray-700 hover:border-gray-500 transition-colors text-sm">
             Launch your campaign
           </Link>
           <Link to="/login" className="bg-[#f43f5e] hover:bg-[#e11d48] text-white font-medium px-6 py-2 rounded-full transition-colors text-sm">
@@ -118,7 +118,7 @@ export default function LandingPage() {
           <Link to="/login" className="w-full sm:w-auto bg-[#f43f5e] hover:bg-[#e11d48] text-white font-medium px-8 py-3.5 rounded-full transition-colors text-lg">
             Start earning
           </Link>
-          <Link to="/login" className="w-full sm:w-auto text-gray-300 hover:text-white font-medium px-8 py-3.5 rounded-full border border-gray-700 hover:border-gray-500 transition-colors text-lg">
+          <Link to="/start-campaign" className="w-full sm:w-auto text-gray-300 hover:text-white font-medium px-8 py-3.5 rounded-full border border-gray-700 hover:border-gray-500 transition-colors text-lg">
             Launch your campaign
           </Link>
         </div>
