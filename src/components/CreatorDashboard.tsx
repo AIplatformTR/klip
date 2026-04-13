@@ -1,3 +1,4 @@
+import VideoEditor from './VideoEditor';
 import { Routes, Route, Link, useNavigate, useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
@@ -294,6 +295,7 @@ export default function CreatorDashboard() {
       <Route path="/balance" element={<Balance />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/campaign/:id" element={<SubmitContent />} />
+      <Route path="/editor" element={<VideoEditor />} />
     </Routes>
   );
 }
@@ -332,6 +334,18 @@ function CreatorHome() {
           <div className="flex items-center justify-center h-32 text-gray-500 gap-2">
             <Clock className="w-5 h-5" /> Coming soon...
           </div>
+        </div>
+
+        {/* Video Editor Card */}
+        <div className="bg-[#1c2333] rounded-xl p-6 border border-gray-800 flex flex-col">
+          <div className="flex items-center gap-2 mb-6">
+            <Video className="text-red-600 w-6 h-6" />
+            <h2 className="text-xl font-bold text-white">Video Editor</h2>
+          </div>
+          <p className="text-gray-400 mb-6 text-sm">Edit your content directly in Klipster.</p>
+          <Link to="/creators/editor" className="mt-auto bg-red-600 hover:bg-red-700 text-white text-center py-2 rounded-lg font-medium transition-colors">
+            Open Editor
+          </Link>
         </div>
 
         {/* Recent Activity Card */}
