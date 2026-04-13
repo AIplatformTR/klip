@@ -84,7 +84,7 @@ export default function App() {
               <RoleSelection onRoleSelected={setUserRole} />
             </div>
           ) : (
-            <Routes>
+            <Routes key={userRole}>
               <Route path="/" element={<Navigate to={`/${userRole}s`} replace />} />
               <Route 
                 path="/brands/*" 
